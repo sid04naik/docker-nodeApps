@@ -1,0 +1,37 @@
+services:
+  app1:
+    build:
+      context: ${ROOT_DIR}${BIN_DIR}/${NODE}
+    volumes:
+      - ${PROJECT_DIR}/${APP1}:/usr/src/app
+    ports:
+      - ${NODE_PORT}
+    env_file:
+      - ${PROJECT_DIR}/${APP1}/.env
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+  app2:
+    build:
+      context: ${ROOT_DIR}${BIN_DIR}/${NODE}
+    volumes:
+      - ${PROJECT_DIR}/${APP2}:/usr/src/app
+    ports:
+      - ${NODE_PORT}
+    env_file:
+      - ${PROJECT_DIR}/${APP2}/.env
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+  nginx:
+    build:
+      context: ${ROOT_DIR}${BIN_DIR}/${NGINX}
+    ports:
+      - '${NGINX_PORT}:80'
+    volumes:
+      - ${ROOT_DIR}${CONFIG_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app1
+      - app2
